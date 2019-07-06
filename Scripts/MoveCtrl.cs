@@ -10,6 +10,10 @@ using UnityEngine;
 public class MoveCtrl : MonoBehaviour
 {
     //public GameObject CastPrefab;
+    public static MoveCtrl Instance
+    {
+        get; set;
+    }
 
     private Unit unit;
     private UnitAttributes unitAttributes;
@@ -17,8 +21,7 @@ public class MoveCtrl : MonoBehaviour
     public Vector3 charaUp = Vector3.up;
 
     public Transform chara;
-    public Transform eye;
-    public Transform glass;
+    public Transform eyeTransform;
     public float speed = 0f;
     public float angularSpeed = 0f;
 
@@ -27,6 +30,7 @@ public class MoveCtrl : MonoBehaviour
     private void Awake()
     {
         EventMgr.UnitBirthEvent.AddListener(Init);
+        Instance = this;
     }
 
     private float v;
@@ -37,8 +41,6 @@ public class MoveCtrl : MonoBehaviour
         v = /*Input.GetAxis("Vertical")*/InputMgr.GetVerticalAxis();
         h = /*Input.GetAxis("Horizontal")*/InputMgr.GetHorizontalAxis();
         ac = Input.GetKey(InputMgr.AccelerationKey) ? 1f : 0f;
-        eye.position = glass.position;
-        eye.localEulerAngles = Vector3.forward * chara.localEulerAngles.z;
     }
 
     private void FixedUpdate()
