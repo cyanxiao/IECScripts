@@ -11,10 +11,14 @@ public class SkillData : ScriptableObject
     [TextArea(1, 3)]
     public string Description = "这里可以输入说明";
     [Header("Basic Info")]
-    public SkillName SkillName;
+    public SkillName SkillName; 
     public SkillType SkillType;
     // 每一发投掷物的伤害（若技能发出多发投掷物）
     public float Damage;
+    // 每分钟发射次数（仅限连射型技能）
+    public float RPM = 100f;
+    // 精确度
+    public float Accuracy = 85f;
     //效果，比如速度加成、生命恢复之类的
     public float[] Params;
     //最大射程
@@ -23,8 +27,8 @@ public class SkillData : ScriptableObject
     public float Speed = 15f;
     //存在时间
     public float LifeSpan = 4f;
-    //施法时间
-    public float SpellTime = 0.2f;
+    //施法冷却（仅限点射型技能和持续型技能）
+    public float Cooldown = 0.2f;
     public float ManaCost;
     //投掷物的生命值
     public float MissileHP = 5;
