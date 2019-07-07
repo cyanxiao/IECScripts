@@ -95,9 +95,10 @@ public class CameraCtrl : MonoBehaviour
         {
             return;
         }
-        parent.position = GameCtrl.PlayerUnit.EyeTransform.position;
+        parent.position = MoveCtrl.Instance.eyeTransform.position;
         UpdatePosition();
         UpdateCameraRotation(Time.fixedDeltaTime);
+        SetAngleAroundZAxis(Time.fixedDeltaTime);
     }
 
     private float xRot, yRot;
@@ -181,14 +182,13 @@ public class CameraCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// 设置镜头绕z轴的旋转角度。由Player的BodyBalancing设定。
+    /// 设置镜头绕z轴的旋转角度。
     /// </summary>
     /// <param name="angle">角度</param>
-    public void SetAngleAroundZAxis(float angle)
+    private void SetAngleAroundZAxis(float dt)
     {
-        Vector3 ea = transform.localEulerAngles;
-        ea.z = angle;
-        transform.localEulerAngles = ea;
+        float angle = MoveCtrl.Instance.chara.localEulerAngles.z;
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(0f, 0f, angle), 10f * dt);
     }
 
 }

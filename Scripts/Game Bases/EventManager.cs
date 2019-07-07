@@ -119,6 +119,124 @@ public static partial class EventMgr
 
     #endregion
 
+    #region 鼠标键按下事件
+    //发布器
+    public class MouseButtonDownEventPublisher
+    {
+        public delegate void Handler(MouseButtonDownEventInfo info);
+        //事件
+        private event Handler CallEvents;
+
+        /// <summary>
+        /// 触发事件
+        /// </summary>
+        /// <param name="info">事件信息</param>
+        public void OnTrigger(MouseButtonDownEventInfo info)
+        {
+            CallEvents?.Invoke(info);
+        }
+
+        /// <summary>
+        /// 监听事件
+        /// </summary>
+        /// <param name="func">事件监听方法</param>
+        public void AddListener(Handler func)
+        {
+            CallEvents += func;
+        }
+
+        /// <summary>
+        /// 取消监听
+        /// </summary>
+        /// <param name="func">事件监听方法</param>
+        public void RemoveListener(Handler func)
+        {
+            CallEvents -= func;
+        }
+    }
+
+    /// <summary>
+    /// 鼠标键按下事件信息
+    /// </summary>
+    public class MouseButtonDownEventInfo : EventArgs
+    {
+        public int Button { get; set; }
+        /// <summary>
+        /// 构造鼠标键按下事件的传入参数
+        /// </summary>
+        /// <param name="button">鼠标键</param>
+        public MouseButtonDownEventInfo(int button)
+        {
+            Button = button;
+        }
+    }
+
+    /// <summary>
+    /// 鼠标键按下事件
+    /// </summary>
+    public static MouseButtonDownEventPublisher MouseButtonDownEvent = new MouseButtonDownEventPublisher();
+
+    #endregion
+
+    #region 鼠标键松开事件
+    //发布器
+    public class MouseButtonUpEventPublisher
+    {
+        public delegate void Handler(MouseButtonUpEventInfo info);
+        //事件
+        private event Handler CallEvents;
+
+        /// <summary>
+        /// 触发事件
+        /// </summary>
+        /// <param name="info">事件信息</param>
+        public void OnTrigger(MouseButtonUpEventInfo info)
+        {
+            CallEvents?.Invoke(info);
+        }
+
+        /// <summary>
+        /// 监听事件
+        /// </summary>
+        /// <param name="func">事件监听方法</param>
+        public void AddListener(Handler func)
+        {
+            CallEvents += func;
+        }
+
+        /// <summary>
+        /// 取消监听
+        /// </summary>
+        /// <param name="func">事件监听方法</param>
+        public void RemoveListener(Handler func)
+        {
+            CallEvents -= func;
+        }
+    }
+
+    /// <summary>
+    /// 鼠标键松开事件信息
+    /// </summary>
+    public class MouseButtonUpEventInfo : EventArgs
+    {
+        public int Button { get; set; }
+        /// <summary>
+        /// 构造鼠标键松开事件的传入参数
+        /// </summary>
+        /// <param name="button">鼠标键</param>
+        public MouseButtonUpEventInfo(int button)
+        {
+            Button = button;
+        }
+    }
+
+    /// <summary>
+    /// 鼠标键松开事件
+    /// </summary>
+    public static MouseButtonUpEventPublisher MouseButtonUpEvent = new MouseButtonUpEventPublisher();
+
+    #endregion
+
     #region 单位最大速度变化事件
     //发布器
     public class MaxVChangeEventPublisher
@@ -895,6 +1013,6 @@ public static partial class EventMgr
 ///// <summary>
 ///// 示例事件
 ///// </summary>
-//public static ExampleEventPublisher ExampleEvent;
+//public static ExampleEventPublisher ExampleEvent = new ExampleEventPublisher();
 
 //#endregion
