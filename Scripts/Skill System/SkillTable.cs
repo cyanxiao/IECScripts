@@ -17,6 +17,8 @@ public class SkillTable : ISkillTable
         }
 
         EventMgr.KeyDownEvent.AddListener(SwitchCell);
+        EventMgr.MouseButtonDownEvent.AddListener(CellMouseBTNDown);
+        EventMgr.MouseButtonUpEvent.AddListener(CellMouseBTNUp);
     }
 
     public void SwitchCell(EventMgr.KeyDownEventInfo info)
@@ -43,7 +45,15 @@ public class SkillTable : ISkillTable
         return currentSkillNum;
     }
 
+    private void CellMouseBTNDown(EventMgr.MouseButtonDownEventInfo info)
+    {
+        SkillCells[currentSkillNum - 1].OnMouseButtonDown();
+    }
 
+    private void CellMouseBTNUp(EventMgr.MouseButtonUpEventInfo info)
+    {
+        SkillCells[currentSkillNum - 1].OnMouseButtonUp();
+    }
 }
 
 public partial class GameCtrl
@@ -63,6 +73,16 @@ public partial class GameCtrl
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             EventMgr.KeyDownEvent.OnTrigger(new EventMgr.KeyDownEventInfo(KeyCode.Alpha3));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            EventMgr.MouseButtonDownEvent.OnTrigger(new EventMgr.MouseButtonDownEventInfo(0));
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            EventMgr.MouseButtonUpEvent.OnTrigger(new EventMgr.MouseButtonUpEventInfo(0));
         }
     }
 }
