@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 这个类表示一个技能槽位。
+/// 该类需要通过Skill Table调用ISkillCell.Init()进行初始化。初始化只需要进行一次。
+/// 
+/// 该类通过实现OnMouseButtonDown和OnMouseButtonUp实现对3种类型的技能的调用（不负责技能实现），包括计算CD和开火频率等等。
+/// 同时，施法扣除法力值也由该类实现。
+/// </summary>
 public class SkillCell : ISkillCell
 {
     ISkill skill;
