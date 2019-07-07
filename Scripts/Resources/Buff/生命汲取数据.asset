@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c5fea920caefe4fa4f6bb3cbd76fea, type: 3}
+  m_Name: "\u751F\u547D\u6C72\u53D6\u6570\u636E"
+  m_EditorClassIdentifier: 
+  Desc: "\u6BCF\u79D2\u5BF9\u654C\u4EBA\u9020\u6210 Effect \u70B9\u4F24\u5BB3\r\n\u5438\u53D6
+    Params[0] \u70B9\u62A4\u76FE\u503C\r\n\u53EF\u53E0\u52A03\u5C42"
+  BuffName: 3
+  BuffType: 0
+  IsDebuff: 1
+  Duration: 4
+  Effect: 2
+  Params:
+  - 1
+  IsSuperimposable: 1
+  maxLayer: 3
+  ConsiderPriority: 0
+  Priority: 0
+  DispelPriority: 0
+  UIName: 
+  UIDesc: 

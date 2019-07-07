@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b6c30d9725507468caec4f3eb7b315, type: 3}
+  m_Name: PlayerData
+  m_EditorClassIdentifier: 
+  tags:
+    player: 0
+    elf: 0
+    devil: 0
+  MaxVelocity: 8
+  MaxTurningVelocity: 60
+  MaxSheildPoint: 50
+  ShieldPointRegenerationRate: 0.2
+  ArmorType: 0
+  MaxManaPoint: 100
+  ManaPointRegenerationRate: 10
+  IsCaster: 0
+  skills: 00000000000000000000000000000000
