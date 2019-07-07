@@ -140,13 +140,15 @@ public class SkillCell : ISkillCell
         // 技能冷却
         if (!isCasting)
         {
+            // 计时器倒计时
             if (timer > 1e-5f)
             {
                 timer -= Time.deltaTime;
-            }
-            else if (timer < -1e-5f)
-            {
-                timer = 0f;
+                // 如果数过了，归零
+                if (timer < -1e-5f)
+                {
+                    timer = 0f;
+                }
             }
         }
     }
