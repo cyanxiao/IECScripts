@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 目前缺少初始化过程。
+/// 目前缺少再初始化过程。即不可以回收利用。
+/// 
+/// 目前想要重写该类，作为父类。
 /// </summary>
 public class Missile : MonoBehaviour
 {
     ISkill skill;
     Unit caster;
-    IMissileHitHandler skillEffectBase;
+    IMissileHitHandler missileHitHandler;
     public float hp;
     bool isAlive = true;
     public enum PhysicalEffectType
@@ -55,6 +57,25 @@ public class Missile : MonoBehaviour
     public float explosionRadius = 1f;
     public float force = 1f;
 
+    private bool isInit = false;
+    private readonly object initMutex = new object();
+    public void Init(Unit caster, ISkill skill, IMissileHitHandler missileHitHandler)
+    {
+        lock (initMutex)
+        {
+            if (isInit)
+            {
+                return;
+            }
+            isInit = true;
+        }
+        this.caster = caster;
+        this.skill = skill;
+        this.missileHitHandler = missileHitHandler;
+        hp = skill.Data.MissileHP;
+        damage = skill.Data.Damage;
+    }
+
     private void Awake()
     {
         if (birthEffectSpawnTransform == null)
@@ -74,8 +95,7 @@ public class Missile : MonoBehaviour
         timer = 0f;
 
 
-        hp = skill.Data.MissileHP;
-        damage = skill.Data.Damage;
+
         if (gameObject.tag != "Missile")
             gameObject.tag = "Missile";
 
@@ -103,12 +123,14 @@ public class Missile : MonoBehaviour
     float timer = 0f;
     private void Update()
     {
+        if (!isInit)
+            return;
         if (!isAlive)
             return;
         timer += Time.deltaTime;
         if (timer > skill.Data.LifeSpan)
         {
-            skillEffectBase.Fade(this);
+            missileHitHandler.Fade(this);
             TakeDamage(1e7f);
         }
         //if (target != null)
@@ -125,12 +147,16 @@ public class Missile : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isInit)
+            return;
         if (isAlive)
-            transform.Translate(skill.Data.Speed * Vector3.forward * Time.deltaTime);
+            transform.Translate(skill.Data.Speed * Vector3.forward * Time.fixedDeltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isInit)
+            return;
         if ((collidesWith.value & other.gameObject.layer) == 0)
             CollisionHandler(other);
         else
@@ -154,7 +180,7 @@ public class Missile : MonoBehaviour
                 if (otherMissile.gameObject == caster.gameObject)
                     return;
                 lastHitCollider = other;
-                skillEffectBase.HitMissile(this, otherMissile);
+                missileHitHandler.HitMissile(this, otherMissile);
             }
             else
             {
@@ -164,7 +190,7 @@ public class Missile : MonoBehaviour
                 if (otherUnit.gameObject == caster.gameObject)
                     return;
                 lastHitCollider = other;
-                skillEffectBase.HitUnit(this, otherUnit);
+                missileHitHandler.HitUnit(this, otherUnit);
             }
         }
         //否则按常规处理
@@ -186,18 +212,18 @@ public class Missile : MonoBehaviour
                     Unit otherUnit = obj.GetComponent<Unit>();
                     if (otherUnit == null)
                         Debug.Log("Cannot Find UnitCtrl Component");
-                    skillEffectBase.HitUnit(this, otherUnit);
+                    missileHitHandler.HitUnit(this, otherUnit);
                     break;
                 //撞到其他投掷物
                 case "Missile":
                     Missile otherMissile = obj.GetComponent<Missile>();
                     if (otherMissile == null)
                         Debug.Log("Cannot Find Missile Component");
-                    skillEffectBase.HitMissile(this, otherMissile);
+                    missileHitHandler.HitMissile(this, otherMissile);
                     break;
                 //撞到其他物体（地形）
                 default:
-                    skillEffectBase.HitTerrain(this);
+                    missileHitHandler.HitTerrain(this);
                     break;
             }
         }
@@ -211,6 +237,8 @@ public class Missile : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (!isInit)
+            return;
         if (!isAlive)
             return;
         hp -= damage;
@@ -262,7 +290,7 @@ public class Missile : MonoBehaviour
 
 
 
-            skillEffectBase.Fade(this);
+            missileHitHandler.Fade(this);
         }
     }
 

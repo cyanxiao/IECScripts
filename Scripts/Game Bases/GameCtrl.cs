@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -67,6 +68,12 @@ public partial class GameCtrl : MonoBehaviour
             for (int i = 0; i < paths.Length; i++)
             {
                 paths[i] = "Unit/" + ((UnitName)i).ToString() + "Data";
+            }
+            paths = GameDB.Instance.skillDataPath.paths = new string[GameDB.MAX_SKILL_INDEX];
+            foreach (SkillName name in Enum.GetValues(typeof(SkillName)))
+            {
+                int i = (int)name;
+                paths[i] = "Skill/" + name + "Data";
             }
         }
 
