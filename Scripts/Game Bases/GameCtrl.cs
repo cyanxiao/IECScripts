@@ -76,6 +76,8 @@ public partial class GameCtrl : MonoBehaviour
 
     private void Update()
     {
+        CheckInputForSkillTable();
+
         EventMgr.UpdateEvent.OnTrigger();
     }
 
