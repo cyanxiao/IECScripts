@@ -30,6 +30,8 @@ public class SkillData : ScriptableObject
     //施法冷却（仅限点射型技能和持续型技能）
     public float Cooldown = 0.2f;
     public float ManaCost;
+    // 该项仅涉及持续型技能
+    public float ManaCostPerSec;
     //投掷物的生命值
     public float MissileHP = 5;
     [Header("AOE 效果")]

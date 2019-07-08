@@ -64,6 +64,10 @@ public partial class GameDB
     /// 单位转向阻尼
     /// </summary>
     public const float ANGULAR_DAMPED_CONST = 3;
+    /// <summary>
+    /// 最大技能数量
+    /// </summary>
+    public const int MAX_SKILL_INDEX = 10;
     #endregion
 
     #region 单位字典

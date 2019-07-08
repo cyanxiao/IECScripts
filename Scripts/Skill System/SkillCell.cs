@@ -63,7 +63,7 @@ public class SkillCell : ISkillCell
     
     private void StartCasting()
     {
-        // 如果不在施法且冷却完毕，则进行施法
+        // 如果不在施法、冷却完毕、单位存活且法力充足，则进行施法
         lock (mutex)
         {
             if (isCasting)
@@ -71,6 +71,10 @@ public class SkillCell : ISkillCell
                 return;
             }
             if (timer > 1e-5f)
+            {
+                return;
+            }
+            if (!caster.attributes.isAlive || caster.attributes.ManaPoint.Value < skill.Data.ManaCost)
             {
                 return;
             }
@@ -92,17 +96,19 @@ public class SkillCell : ISkillCell
                 else
                 {
                     // prompt
+                    StopCasting();
                 }
                 break;
 
             case SkillType.ContinuousSkill:
                 if (Cast())
                 {
-                    StopCasting();
+
                 }
                 else
                 {
                     // prompt
+                    StopCasting();
                 }
                 break;
 
@@ -113,7 +119,7 @@ public class SkillCell : ISkillCell
 
     private void StopCasting()
     {
-        // 如果不在施法，则进行施法
+        // 如果在施法，则停止施法
         lock (mutex)
         {
             if (!isCasting)
@@ -126,7 +132,6 @@ public class SkillCell : ISkillCell
         switch (skill.Data.SkillType)
         {
             case SkillType.StrafeSkill:
-                EventMgr.UpdateEvent.RemoveListener(Strafe);
                 break;
 
             case SkillType.BurstfireSkill:
@@ -134,6 +139,8 @@ public class SkillCell : ISkillCell
                 break;
 
             case SkillType.ContinuousSkill:
+                // 停止持续型技能
+                skill.Trigger();
                 timer = cooldown;
                 break;
 
@@ -158,8 +165,27 @@ public class SkillCell : ISkillCell
                 }
             }
         }
+        // 如果是持续型技能正在施法
+        else
+        {
+            switch (skill.Data.SkillType)
+            {
+                case SkillType.StrafeSkill:
+                    Strafe();
+                    break;
+                case SkillType.BurstfireSkill:
+                    // do nothing
+                    break;
+                case SkillType.ContinuousSkill:
+                    ContinuouslyCostingMana();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
+    // 连射型技能开火
     private void Strafe()
     {
         timer -= Time.deltaTime;
@@ -171,6 +197,20 @@ public class SkillCell : ISkillCell
             {
                 StopCasting();
             }
+        }
+    }
+
+    // 持续型技能持续耗魔
+    private void ContinuouslyCostingMana()
+    {
+        float dMana = skill.Data.ManaCostPerSec * Time.deltaTime;
+        if (caster.attributes.isAlive && caster.attributes.ManaPoint.Value >= dMana)
+        {
+            caster.attributes.ManaPoint.Value -= dMana;
+        }
+        else
+        {
+            StopCasting();
         }
     }
 

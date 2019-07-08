@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 这个类是对持续型技能及其抽象父类的测试，只有log功能。
 /// </summary>
-public class TestContinuousSkill : AbstractContinuousSkill
+public class Skill_TestContinuousSkill : AbstractContinuousSkill
 {
     protected override void LoadData()
     {

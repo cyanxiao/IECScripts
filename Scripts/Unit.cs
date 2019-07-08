@@ -12,11 +12,13 @@ using UnityEngine;
 public partial class Unit : MonoBehaviour
 {
     public Rigidbody rigbody;
-    public Transform BulletSpawnPoint;
+    public Transform SpawnTransform;
     public UnitName unitName;
     public UnitAttributes attributes;
     public Canvas unitCanvas;
     public Transform unitCamera;
+    // 技能表
+    SkillTable skillTable = new SkillTable();
 
 
     #region 生命周期
@@ -47,9 +49,10 @@ public partial class Unit : MonoBehaviour
         {
             GameCtrl.Instance.PlayerChara = this;
             StartCoroutine(DisplayProperity());
-            SkillTable skillTable = new SkillTable();
-            skillTable.Init(this, this.transform);
         }
+        // 如果该单位是施法单位，则初始化技能表
+        if (attributes.data.IsCaster)
+            skillTable.Init(this, SpawnTransform ?? transform);
     }
 
     private void Update()
