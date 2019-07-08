@@ -889,6 +889,65 @@ public static partial class EventMgr
 
     }
     #endregion
+
+    #region 按下键盘事件
+    //发布器
+    public class KeyDownEventPublisher
+    {
+        public delegate void Handler(KeyDownEventInfo info);
+        //事件
+        private event Handler CallEvents;
+
+        /// <summary>
+        /// 触发事件
+        /// </summary>
+        /// <param name="info">事件信息</param>
+        public void OnTrigger(KeyDownEventInfo info)
+        {
+            CallEvents?.Invoke(info);
+        }
+
+        /// <summary>
+        /// 监听事件
+        /// </summary>
+        /// <param name="func">事件监听方法</param>
+        public void AddListener(Handler func)
+        {
+            CallEvents += func;
+        }
+
+        /// <summary>
+        /// 取消监听
+        /// </summary>
+        /// <param name="func">事件监听方法</param>
+        public void RemoveListener(Handler func)
+        {
+            CallEvents -= func;
+        }
+    }
+
+    /// <summary>
+    /// 按键事件信息
+    /// </summary>
+    public class KeyDownEventInfo : EventArgs
+    {
+        public KeyCode keyCode { get; private set; }
+        /// <summary>
+        /// 传入键盘按下的按键
+        /// </summary>
+        /// <param name="keyCode">按下的键盘按键</param>
+        public KeyDownEventInfo(KeyCode keyCode)
+        {
+            this.keyCode = keyCode;
+        }
+    }
+
+    /// <summary>
+    /// 按键事件
+    /// </summary>
+    public static KeyDownEventPublisher KeyDownEvent = new KeyDownEventPublisher();
+
+    #endregion
 }
 //#region 示例事件
 ////发布器
