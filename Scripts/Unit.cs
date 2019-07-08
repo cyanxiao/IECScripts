@@ -47,10 +47,8 @@ public partial class Unit : MonoBehaviour
         {
             GameCtrl.Instance.PlayerChara = this;
             StartCoroutine(DisplayProperity());
-            ////For Test
-            //SkillTable skillTable = new SkillTable();
-            //skillTable.Init(this, this.transform);
-            ////Test End
+            SkillTable skillTable = new SkillTable();
+            skillTable.Init(this, this.transform);
         }
     }
 

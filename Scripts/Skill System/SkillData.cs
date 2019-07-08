@@ -11,11 +11,7 @@ public class SkillData : ScriptableObject
     [TextArea(1, 3)]
     public string Description = "这里可以输入说明";
     [Header("Basic Info")]
-<<<<<<< HEAD
     public SkillName SkillName;
-=======
-    public SkillName SkillName; 
->>>>>>> ba67c3740c1c27ba4677febeadd84443de5a2a95
     public SkillType SkillType;
     // 每一发投掷物的伤害（若技能发出多发投掷物）
     public float Damage;
