@@ -5,5 +5,5 @@ using UnityEngine;
 public enum SkillName
 {
     NullSkill,
-    TestContinuousSkill,
+
 }
