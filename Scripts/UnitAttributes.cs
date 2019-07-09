@@ -301,6 +301,7 @@ public partial class UnitAttributes
         OriginalMaxTurningV = data.MaxTurningVelocity;
         OriginalMaxSP = data.MaxSheildPoint;
         MaxManaPoint.OriginalValue = data.MaxManaPoint;
+        ManaPoint.OriginalValue = data.MaxManaPoint;
         MPRegenerationRate.OriginalValue = data.ManaPointRegenerationRate;
         SPRegenerationRate.OriginalValue = data.ShieldPointRegenerationRate;
         //初始化速度
