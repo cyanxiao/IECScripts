@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b9de5a0de724364fb13b89b07a4b095, type: 3}
-  m_Name: TestStrafeSkill
+  m_Name: TestStrafeSkillData
   m_EditorClassIdentifier: 
   Description: "\u8FD9\u91CC\u53EF\u4EE5\u8F93\u5165\u8BF4\u660E"
-  SkillName: 0
+  SkillName: 3
   SkillType: 0
   Damage: 0
   RPM: 100

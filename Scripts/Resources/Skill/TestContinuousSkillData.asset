@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TestContinuousSkillData
   m_EditorClassIdentifier: 
   Description: "\u8FD9\u91CC\u53EF\u4EE5\u8F93\u5165\u8BF4\u660E"
-  SkillName: 0
-  SkillType: 0
+  SkillName: 1
+  SkillType: 2
   Damage: 0
   RPM: 100
   Accuracy: 85
@@ -22,9 +22,9 @@ MonoBehaviour:
   Range: 50
   Speed: 15
   LifeSpan: 4
-  Cooldown: 0.2
-  ManaCost: 0
-  ManaCostPerSec: 0
+  Cooldown: 4
+  ManaCost: 20
+  ManaCostPerSec: 15
   MissileHP: 5
   IsAOE: 0
   InnerBlastRadius: 0
