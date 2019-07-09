@@ -33,15 +33,15 @@ public class SkillTable : ISkillTable
         {
             case KeyCode.Alpha1:
                 currentSkillNum = 1;
-                Debug.Log("1");
+                Debug.Log("切换至技能 1");
                 break;
             case KeyCode.Alpha2:
                 currentSkillNum = 2;
-                Debug.Log("2");
+                Debug.Log("切换至技能 2");
                 break;
             case KeyCode.Alpha3:
                 currentSkillNum = 3;
-                Debug.Log("3");
+                Debug.Log("切换至技能 3");
                 break;
         }
     }

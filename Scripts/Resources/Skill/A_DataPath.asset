@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1df777167e5e2b4bb0197357dcd7534, type: 3}
   m_Name: A_DataPath
   m_EditorClassIdentifier: 
-  paths: []
+  paths:
+  - 
+  - 
+  - 
+  - 
+  - 
