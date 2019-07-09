@@ -23,5 +23,5 @@ MonoBehaviour:
   ArmorType: 0
   MaxManaPoint: 100
   ManaPointRegenerationRate: 10
-  IsCaster: 0
-  skills: 00000000000000000000000000000000
+  IsCaster: 1
+  skills: 01000000020000000300000000000000
