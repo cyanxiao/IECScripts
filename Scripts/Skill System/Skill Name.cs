@@ -6,4 +6,6 @@ public enum SkillName
 {
     NullSkill,
     TestContinuousSkill,
+    TestBurstfireSkill,
+    TestStrafeSkill
 }
