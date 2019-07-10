@@ -61,6 +61,11 @@ public class SkillCell : ISkillCell
         StopCasting();
     }
     
+    public void ForceToStopCasting()
+    {
+        StopCasting();
+    }
+
     private void StartCasting()
     {
         // 如果不在施法、冷却完毕、单位存活且法力充足，则进行施法
@@ -85,7 +90,6 @@ public class SkillCell : ISkillCell
         {
             case SkillType.StrafeSkill:
                 timer = 0f;
-                EventMgr.UpdateEvent.AddListener(Strafe);
                 break;
 
             case SkillType.BurstfireSkill:
