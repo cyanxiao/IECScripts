@@ -7,6 +7,7 @@ using UnityEngine;
 /// 
 /// 目前想要重写该类，作为父类。
 /// </summary>
+//[RequireComponent(typeof(Rigidbody))]
 public class Missile : MonoBehaviour
 {
     ISkill skill;
