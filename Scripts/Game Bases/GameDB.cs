@@ -96,11 +96,11 @@ public partial class GameDB
     /// 将投掷物加入池（请调用Gamef.MissileBirth）
     /// </summary>
     /// <param name="missile">投掷物</param>
-    public void MissileBirth(Missile missile)
+    public int MissileBirth(Missile missile)
     {
         if (missile.ID != -1)
-            return;
-        missile.ID = missilePool.IDAlloc(missile);
+            return missile.ID;
+        return missilePool.IDAlloc(missile);
     }
     /// <summary>
     /// 将投掷物清除（请调用Gamef.MissileClear）
