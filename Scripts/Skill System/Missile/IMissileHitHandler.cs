@@ -25,7 +25,7 @@ public interface IMissileHitHandler
     void HitUnit(Missile self, Unit unit);
 
     /// <summary>
-    /// 投掷物消亡。投掷物在到达一定时限或者被AOE技能击中导致HP归零后会消亡。即在非碰撞的情况下死亡。
+    /// 投掷物死亡。投掷物在到达一定时限或者被HP归零后会死亡。
     /// </summary>
     /// <param name="self">投掷物</param>
     void Fade(Missile self);
