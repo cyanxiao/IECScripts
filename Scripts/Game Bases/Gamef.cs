@@ -135,9 +135,9 @@ public static partial class Gamef
     /// 将投掷物加入池
     /// </summary>
     /// <param name="missile">投掷物组件</param>
-    public static void MissileBirth(Missile missile)
+    public static int MissileBirth(Missile missile)
     {
-        GameDB.Instance.MissileBirth(missile);
+        return GameDB.Instance.MissileBirth(missile);
     }
     /// <summary>
     /// 将投掷物移出池

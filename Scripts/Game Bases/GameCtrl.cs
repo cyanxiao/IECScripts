@@ -42,7 +42,6 @@ public partial class GameCtrl : MonoBehaviour
     #endregion
 
     public bool BuildDataPath = false;
-
     #region 生命周期
     private void Awake()
     {
@@ -78,7 +77,7 @@ public partial class GameCtrl : MonoBehaviour
         }
 
         //加载游戏场景
-        SceneManager.LoadSceneAsync(GameDB.MyScene.GameScene);
+        //SceneManager.LoadSceneAsync(GameDB.MyScene.GameScene);
     }
 
     private void Update()
