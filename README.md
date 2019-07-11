@@ -6,4 +6,4 @@ This unity game was originally named *Relics Beyond the Cloud*.
 
 ## Contributors
 * [@RealTonyShaw](https://github.com/RealTonyShaw)	
-* [@1170300303](https://github.com/1170300303)
+* [@FANTOME-PAN](https://github.com/FANTOME-PAN)
