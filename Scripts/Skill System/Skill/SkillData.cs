@@ -48,4 +48,6 @@ public class SkillData : ScriptableObject
     public float TrackingConst = 1f;
     public bool IsPassive = false;
     public BuffName[] Buffs;
+    [Header("爆炸特性")]
+    public float Force = 0;
 }
