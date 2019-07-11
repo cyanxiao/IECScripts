@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b9de5a0de724364fb13b89b07a4b095, type: 3}
+  m_Script: {fileID: 11500000, guid: ff8dd5086f5f8e5479d15152029120d0, type: 3}
   m_Name: TestContinuousSkillData
   m_EditorClassIdentifier: 
   Description: "\u8FD9\u91CC\u53EF\u4EE5\u8F93\u5165\u8BF4\u660E"
-  SkillName: 1
+  SkillName: 0
   SkillType: 2
   Damage: 0
   RPM: 100
@@ -22,7 +22,7 @@ MonoBehaviour:
   Range: 50
   Speed: 15
   LifeSpan: 4
-  Cooldown: 4
+  Cooldown: 0.2
   ManaCost: 20
   ManaCostPerSec: 15
   MissileHP: 5
@@ -37,3 +37,4 @@ MonoBehaviour:
   TrackingConst: 1
   IsPassive: 0
   Buffs: 
+  Force: 0

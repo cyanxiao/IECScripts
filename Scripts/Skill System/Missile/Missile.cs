@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(Rigidbody))]
 public class Missile : MonoBehaviour
 {
     public float HP { get; private set; }
@@ -16,10 +16,27 @@ public class Missile : MonoBehaviour
     public Unit Caster { get; private set; }
 
     IMissileHitHandler missileHitHandler;
-    IPhysicalEffectHandler physicalEffectHandler;
+    IPhysicalEffectHandler physicalEffectHandler = new PhysicalEffectHandler();
     ISpecialEffectHandler specialEffectHandler;
 
     bool isInit = false;
+
+    /// <summary>
+    /// 对投掷物初始化。
+    /// </summary>
+    /// <param name="caster">投掷物的释放者</param>
+    /// <param name="skill">释放投掷物的技能</param>
+    public void Init(Unit caster, ISkill skill)
+    {
+        this.Caster = caster;
+        this.Skill = skill;
+        this.Damage = skill.Data.Damage;
+        this.HP = skill.Data.MissileHP;
+        this.missileHitHandler = new MissileHitBasicHandler();
+        this.specialEffectHandler = new SpecialEffectHandler();
+        ID = Gamef.MissileBirth(this);
+        isInit = true;
+    }
 
     /// <summary>
     /// 对投掷物初始化。
@@ -71,10 +88,13 @@ public class Missile : MonoBehaviour
     float timer = 0f;
     private void Update()
     {
+        if (!isInit)
+            return;
         if (!IsAlive)
         {
             return;
         }
+
         timer += Time.deltaTime;
         if (timer >= Skill.Data.LifeSpan)
         {
@@ -83,21 +103,44 @@ public class Missile : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (!isInit)
+            return;
+        Track();
+        Move(Time.fixedDeltaTime);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        if (!isInit)
+            return;
         if ((collidesWith.value & (0x1 << gameObject.layer)) != 0)
         {
-            GameObject otherObj = other.attachedRigidbody.gameObject;
+            Rigidbody otherRig = other.attachedRigidbody;
+            // 只有地形没有刚体
+            GameObject otherObj = otherRig == null ? other.gameObject : otherRig.gameObject;
             switch (otherObj.layer)
             {
                 case Layer.Unit:
-                    missileHitHandler.HitUnit(this, otherObj.GetComponent<Unit>());
+                    if (otherObj != Caster.gameObject)
+                    {
+                        missileHitHandler.HitUnit(this, otherObj.GetComponent<Unit>());
+                        if (!Skill.Data.IsAOE && otherRig != null)
+                        {
+                            physicalEffectHandler.CreateImpulse(Skill.Data, transform.position, transform.forward, otherRig);
+                        }
+                    }
                     break;
                 case Layer.Missile:
                     missileHitHandler.HitMissile(this, otherObj.GetComponent<Missile>());
                     break;
                 default:
                     missileHitHandler.HitTerrain(this);
+                    if (!Skill.Data.IsAOE && otherRig != null)
+                    {
+                        physicalEffectHandler.CreateImpulse(Skill.Data, transform.position, transform.forward, otherRig);
+                    }
                     break;
             }
         }
@@ -124,6 +167,32 @@ public class Missile : MonoBehaviour
     {
         specialEffectHandler.CreateDestroyEffect(Caster, this, deathEffect);
         Gamef.MissileClear(ID);
+        Gamef.Destroy(gameObject);
+    }
+
+    void Track()
+    {
+
+    }
+    void Move(float dt)
+    {
+        transform.Translate(Vector3.forward * Skill.Data.Speed * dt);
+    }
+
+    /// <summary>
+    /// Enable后重置参数
+    /// </summary>
+    private void OnEnable()
+    {
+        if (isInit)
+        {
+            this.Caster = null;
+            this.Skill = null;
+            this.missileHitHandler = null;
+            this.specialEffectHandler = null;
+            ID = -1;
+            isInit = false;
+        }
     }
 
     #region AOE爆炸
@@ -141,6 +210,9 @@ public class Missile : MonoBehaviour
     {
         float dis, damage = Skill.Data.Damage;
         BlastType type;
+
+        // 制造爆炸力（物理效果）
+        physicalEffectHandler.CreateExplosiveForce(Skill.Data, transform.position);
 
         //对单位造成AOE伤害
         GameDB.unitPool.Traversal(delegate (Unit other)
