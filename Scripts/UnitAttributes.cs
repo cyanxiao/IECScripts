@@ -294,9 +294,9 @@ public partial class UnitAttributes
             return;
         isInit = true;
         //读取单位数据并赋初值
-        data = Gamef.LoadUnitData(name);
         this.unit = unit;
         name = unit.unitName;
+        data = Gamef.LoadUnitData(name);
         OriginalMaxV = data.MaxVelocity;
         OriginalMaxTurningV = data.MaxTurningVelocity;
         OriginalMaxSP = data.MaxSheildPoint;
