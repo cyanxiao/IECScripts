@@ -26,6 +26,6 @@ public class PhysicalEffectHandler : IPhysicalEffectHandler
 
     public void CreateImpulse(SkillData data, Vector3 position, Vector3 direction, Rigidbody rigidbody)
     {
-        rigidbody.AddForceAtPosition(direction, position, ForceMode.Impulse);
+        rigidbody.AddForceAtPosition(data.Force * direction, position, ForceMode.Impulse);
     }
 }
