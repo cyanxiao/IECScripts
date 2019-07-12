@@ -22,10 +22,9 @@ public interface ISkillCell
     /// </summary>
     void OnMouseButtonUp();
     /// <summary>
-    /// 将当前的技能槽位中的技能设置为skill。
+    /// 当前技能槽位中的技能。
     /// </summary>
-    /// <param name="skill">技能</param>
-    void SetSkill(ISkill skill);
+    ISkill CurrentSkill { get; set; }
     /// <summary>
     /// 强制停止施法。
     /// </summary>

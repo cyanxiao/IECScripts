@@ -18,6 +18,6 @@ public interface ISkillTable
     /// <summary>
     /// 获得现在玩家技能的序号，可能是 1、2、3 号技能
     /// </summary>
-    /// <returns>技能序号，1、2 或者 3 号技能</returns>
-    int GetCurrentSkill();
+    /// <returns>技能，1、2 或者 3 号技能</returns>
+    ISkill CurrentSkill { get; }
 }

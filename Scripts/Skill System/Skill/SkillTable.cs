@@ -8,6 +8,8 @@ public class SkillTable : ISkillTable
     public ISkillCell[] SkillCells = new SkillCell[4];
     private int currentSkillNum = 1;
 
+    public ISkill CurrentSkill => SkillCells[currentSkillNum - 1].CurrentSkill;
+
     public void Init(Unit caster, Transform spawnTransform)
     {
         for (int i = 0; i < 4; i++)
@@ -18,7 +20,7 @@ public class SkillTable : ISkillTable
             ISkill tmpSkill = ConcreteSkillFactory.CreateSkill(caster.attributes.data.skills[i]);
             if (tmpSkill != null)
             {
-                SkillCells[i].SetSkill(tmpSkill);
+                SkillCells[i].CurrentSkill = tmpSkill;
             }
         }
 
@@ -44,11 +46,6 @@ public class SkillTable : ISkillTable
                 Debug.Log("切换至技能 3");
                 break;
         }
-    }
-
-    public int GetCurrentSkill()
-    {
-        return currentSkillNum;
     }
 
     private void CellMouseBTNDown(EventMgr.MouseButtonDownEventInfo info)
