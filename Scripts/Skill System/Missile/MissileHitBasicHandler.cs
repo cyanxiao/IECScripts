@@ -41,6 +41,10 @@ public class MissileHitBasicHandler : IMissileHitHandler
         {
             self.Blast(null);
         }
+        else
+        {
+            Gamef.Damage(self.Damage, DamageType.unset, self.Caster, unit);
+        }
         self.TakeDamage(1e7f);
     }
 }

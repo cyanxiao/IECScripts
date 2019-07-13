@@ -9,6 +9,7 @@ using UnityEngine;
 /// 其中，注册和注销分别指将单位加入单位池并且分配ID和将单位从单位池中移除。
 /// Unit负责处理与单位的生命周期相关的事宜。
 /// </summary>
+[RequireComponent(typeof(Rigidbody))]
 public partial class Unit : MonoBehaviour
 {
     public Rigidbody rigbody;
