@@ -68,17 +68,21 @@ public partial class GameDB
     /// 最大技能数量
     /// </summary>
     public const int MAX_SKILL_INDEX = 10;
+    /// <summary>
+    /// 最大瞄准角度
+    /// </summary>
+    public const float MAX_AIMING_ANGLE = 5f;
     #endregion
 
     #region 单位字典
     /// <summary>
     /// 单位池，记录所有单位信息
     /// </summary>
-    public static UnitPool unitPool = new UnitPool();
+    public static ObjectPool<Unit> unitPool = new ObjectPool<Unit>();
     /// <summary>
     /// 投掷物池，记录所有投掷物信息
     /// </summary>
-    public static MissilePool missilePool = new MissilePool();
+    public static ObjectPool<Missile> missilePool = new ObjectPool<Missile>();
 
     /// <summary>
     /// 将单位加入单位池(请勿调用，该方法不会触发单位出生事件，请使用Gamef.UnitBirth()方法)
@@ -108,7 +112,7 @@ public partial class GameDB
     /// <param name="id">投掷物ID</param>
     public void MissileClear(int id)
     {
-        missilePool.RemoveMissile(id);
+        missilePool.RemoveObject(id);
     }
 
     /// <summary>
@@ -117,7 +121,7 @@ public partial class GameDB
     /// <param name="unitID">单位ID</param>
     public void UnitClear(int unitID)
     {
-        unitPool.RemoveUnit(unitID);
+        unitPool.RemoveObject(unitID);
     }
 
     /// <summary>
@@ -127,7 +131,7 @@ public partial class GameDB
     /// <returns>单位信息</returns>
     public Unit GetUnit(int unitID)
     {
-        return unitPool.GetUnit(unitID);
+        return unitPool.GetObject(unitID);
     }
     #endregion
 
@@ -282,361 +286,4 @@ public partial class GameDB
     }
     public static SkillBuffer skillBuffer = new SkillBuffer();
     #endregion
-}
-
-public class UnitPool
-{
-    private const int BLK_LENGTH = 1 << 8;
-    private struct UnitCell
-    {
-        public Unit unit;
-        public bool isValid;
-    }
-    int maxLen = 0;
-    List<UnitCell[]> blkList;
-    List<Unit> unitList = new List<Unit>();
-    public List<Unit> UnitList
-    {
-        get
-        {
-            return unitList;
-        }
-    }
-    //存储已经不被占用的id（即单位被清除）
-    Queue<int> idQueue = new Queue<int>();
-    /// <summary>
-    /// 给单位分配ID
-    /// </summary>
-    /// <param name="unit">目标单位</param>
-    /// <returns>单位ID</returns>
-    public int IDAlloc(Unit unit)
-    {
-        lock (blkList)
-        {
-            int res = -1;
-            if (idQueue.Count > 0)
-                res = idQueue.Dequeue();
-            else
-            {
-                res = maxLen++;
-                //如果超负荷，则申请一个新的数组
-                if ((res & ~0xff) >= blkList.Count)
-                {
-                    UnitCell[] cells = new UnitCell[BLK_LENGTH];
-                    for (int i = 0; i < BLK_LENGTH; i++)
-                    {
-                        cells[i].isValid = false;
-                    }
-                    blkList.Add(cells);
-                }
-            }
-            unitList.Add((blkList[res & ~0xff][res & 0xff] = new UnitCell()
-            {
-                unit = unit,
-                isValid = true,
-            }).unit);
-            Debug.Log("Add unit to blk " + (res & ~0xff) + ", cell " + (res & 0xff));
-            return res;
-
-        }
-    }
-    /// <summary>
-    /// 获取ID对应单位
-    /// </summary>
-    /// <param name="id">单位ID</param>
-    /// <returns>单位</returns>
-    public Unit GetUnit(int id)
-    {
-        return blkList[id & ~0xff][id & 0xff].unit;
-    }
-    /// <summary>
-    /// 检查ID是否被占用
-    /// </summary>
-    /// <param name="id">单位ID</param>
-    /// <returns>是否被占用</returns>
-    public bool CheckID(int id)
-    {
-        return blkList[id & ~0xff][id & 0xff].isValid;
-    }
-    /// <summary>
-    /// 移除单位
-    /// </summary>
-    /// <param name="id">单位ID</param>
-    public void RemoveUnit(int id)
-    {
-        lock (blkList)
-        {
-            blkList[id & ~0xff][id & 0xff].isValid = false;
-            unitList.Remove(blkList[id & ~0xff][id & 0xff].unit);
-            idQueue.Enqueue(id);
-        }
-    }
-
-    public UnitPool()
-    {
-        UnitCell[] cells = new UnitCell[BLK_LENGTH];
-        for (int i = 0; i < BLK_LENGTH; i++)
-        {
-            cells[i].isValid = false;
-        }
-        blkList = new List<UnitCell[]>()
-        {
-            cells,
-        };
-    }
-
-    public delegate void TraversalHandler(Unit unit);
-    /// <summary>
-    /// 遍历所有池中物体
-    /// </summary>
-    /// <param name="handler"></param>
-    public void Traversal(TraversalHandler handler)
-    {
-        UnitCell[] cells;
-        for (int i = 0; i < blkList.Count; i++)
-        {
-            cells = blkList[i];
-            for (int j = 0; j < BLK_LENGTH; j++)
-            {
-                if (cells[j].isValid)
-                {
-                    handler(cells[j].unit);
-                }
-            }
-        }
-    }
-}
-
-public class MissilePool
-{
-    private const int BLK_LENGTH = 1 << 8;
-    private struct InfoCell
-    {
-        public Missile info;
-        public bool isValid;
-    }
-    int maxLen = 0;
-    List<InfoCell[]> blkList;
-
-    //存储已经不被占用的id（即投掷物被清除）
-    Queue<int> idQueue = new Queue<int>();
-    /// <summary>
-    /// 给投掷物分配ID
-    /// </summary>
-    /// <param name="missile">目标投掷物</param>
-    /// <returns>投掷物ID</returns>
-    public int IDAlloc(Missile missile)
-    {
-        lock (blkList)
-        {
-            int res = -1;
-            if (idQueue.Count > 0)
-                res = idQueue.Dequeue();
-            else
-            {
-                res = maxLen++;
-                //如果超负荷，则申请一个新的数组
-                if ((res & ~0xff) >= blkList.Count)
-                {
-                    InfoCell[] cells = new InfoCell[BLK_LENGTH];
-                    for (int i = 0; i < BLK_LENGTH; i++)
-                    {
-                        cells[i].isValid = false;
-                    }
-                    blkList.Add(cells);
-                }
-            }
-            blkList[res & ~0xff][res & 0xff] = new InfoCell()
-            {
-                info = missile,
-                isValid = true,
-            };
-
-            Debug.Log("Add missile to blk " + (res & ~0xff) + ", cell " + (res & 0xff));
-            return res;
-        }
-    }
-    /// <summary>
-    /// 获取ID对应投掷物
-    /// </summary>
-    /// <param name="id">投掷物ID</param>
-    /// <returns>投掷物</returns>
-    public Missile GetMissile(int id)
-    {
-        return blkList[id & ~0xff][id & 0xff].info;
-    }
-    /// <summary>
-    /// 检查ID是否被占用
-    /// </summary>
-    /// <param name="id">投掷物ID</param>
-    /// <returns>是否被占用</returns>
-    public bool CheckID(int id)
-    {
-        return blkList[id & ~0xff][id & 0xff].isValid;
-    }
-    /// <summary>
-    /// 移除投掷物
-    /// </summary>
-    /// <param name="id">投掷物ID</param>
-    public void RemoveMissile(int id)
-    {
-        lock (blkList)
-        {
-            blkList[id & ~0xff][id & 0xff].isValid = false;
-            idQueue.Enqueue(id);
-            Debug.Log("remove missile from blk " + (id & ~0xff) + ", cell " + (id & 0xff));
-        }
-    }
-
-    public MissilePool()
-    {
-        InfoCell[] cells = new InfoCell[BLK_LENGTH];
-        for (int i = 0; i < BLK_LENGTH; i++)
-        {
-            cells[i].isValid = false;
-        }
-        blkList = new List<InfoCell[]>()
-        {
-            cells,
-        };
-    }
-    public delegate void TraversalHandler(Missile missile);
-    /// <summary>
-    /// 遍历所有池中物体
-    /// </summary>
-    /// <param name="handler"></param>
-    public void Traversal(TraversalHandler handler)
-    {
-        InfoCell[] cells;
-        for (int i = 0; i < blkList.Count; i++)
-        {
-            cells = blkList[i];
-            for (int j = 0; j < BLK_LENGTH; j++)
-            {
-                if (cells[j].isValid)
-                {
-                    handler(cells[j].info);
-                }
-            }
-        }
-    }
-}
-
-
-public class ObjectPool<T>
-{
-    private const int BLK_LENGTH = 1 << 8;
-    private struct InfoCell
-    {
-        public T info;
-        public bool isValid;
-    }
-    int maxLen = 0;
-    List<InfoCell[]> blkList;
-    List<T> objectList = new List<T>();
-    public List<T> ObjectList
-    {
-        get
-        {
-            return objectList;
-        }
-    }
-    //存储已经不被占用的id（即对象被清除）
-    Queue<int> idQueue = new Queue<int>();
-    /// <summary>
-    /// 给对象分配ID
-    /// </summary>
-    /// <param name="missile">目标对象</param>
-    /// <returns>对象ID</returns>
-    public int IDAlloc(T missile)
-    {
-        lock (blkList)
-        {
-            int res = -1;
-            if (idQueue.Count > 0)
-                res = idQueue.Dequeue();
-            else
-            {
-                res = maxLen++;
-                //如果超负荷，则申请一个新的数组
-                if ((res & ~0xff) >= blkList.Count)
-                {
-                    InfoCell[] cells = new InfoCell[BLK_LENGTH];
-                    for (int i = 0; i < BLK_LENGTH; i++)
-                    {
-                        cells[i].isValid = false;
-                    }
-                    blkList.Add(cells);
-                }
-            }
-            lock (objectList)
-                objectList.Add((blkList[res & ~0xff][res & 0xff] = new InfoCell()
-                {
-                    info = missile,
-                    isValid = true,
-                }).info);
-            Debug.Log("Add object to blk " + (res & ~0xff) + ", cell " + (res & 0xff));
-            return res;
-        }
-    }
-    /// <summary>
-    /// 获取ID对应对象
-    /// </summary>
-    /// <param name="id">对象ID</param>
-    /// <returns>对象</returns>
-    public T GetObject(int id)
-    {
-        return blkList[id & ~0xff][id & 0xff].info;
-    }
-    /// <summary>
-    /// 检查ID是否被占用
-    /// </summary>
-    /// <param name="id">对象ID</param>
-    /// <returns>是否被占用</returns>
-    public bool CheckID(int id)
-    {
-        return blkList[id & ~0xff][id & 0xff].isValid;
-    }
-    /// <summary>
-    /// 移除对象
-    /// </summary>
-    /// <param name="id">对象ID</param>
-    public void RemoveObject(int id)
-    {
-        lock (blkList)
-        {
-            blkList[id & ~0xff][id & 0xff].isValid = false;
-            lock (objectList)
-                objectList.Remove(blkList[id & ~0xff][id & 0xff].info);
-            idQueue.Enqueue(id);
-        }
-    }
-
-    public ObjectPool()
-    {
-        InfoCell[] cells = new InfoCell[BLK_LENGTH];
-        for (int i = 0; i < BLK_LENGTH; i++)
-        {
-            cells[i].isValid = false;
-        }
-        blkList = new List<InfoCell[]>()
-        {
-            cells,
-        };
-    }
-    public delegate void TraversalHandler(T obj);
-    /// <summary>
-    /// 遍历所有池中对象
-    /// </summary>
-    /// <param name="handler"></param>
-    public void Traversal(TraversalHandler handler)
-    {
-        lock (objectList)
-        {
-            foreach (T obj in objectList)
-            {
-                handler(obj);
-            }
-        }
-    }
 }
