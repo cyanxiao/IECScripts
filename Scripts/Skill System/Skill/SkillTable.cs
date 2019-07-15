@@ -7,11 +7,16 @@ public class SkillTable : ISkillTable
     // 第 0，1，2 格技能为可切换技能，3 格技能为持续型技能
     public ISkillCell[] SkillCells = new SkillCell[4];
     private int currentSkillNum = 1;
+    // Test Needed
+    private Unit caster;
 
     public ISkill CurrentSkill => SkillCells[currentSkillNum - 1].CurrentSkill;
 
     public void Init(Unit caster, Transform spawnTransform)
     {
+        // Test Needed
+        this.caster = caster;
+
         for (int i = 0; i < 4; i++)
         {
             SkillCells[i] = new SkillCell();
@@ -31,18 +36,39 @@ public class SkillTable : ISkillTable
 
     public void SwitchCell(EventMgr.KeyDownEventInfo info)
     {
+        // 判定切换前技能是否与切换后技能相同，如果不同则为 true，即可以重置精确度
+        bool flag = false;
         switch (info.keyCode)
         {
             case KeyCode.Alpha1:
+                // 如果切换前的技能还在施放，应该立即停止该技能
+                if (currentSkillNum != 1)
+                {
+                    SkillCells[currentSkillNum].ForceToStopCasting();
+                    flag = true;
+                } 
                 currentSkillNum = 1;
+                if(flag)
+                    SetUnitInitAccuracy(SkillCells[currentSkillNum].CurrentSkill.Data.Accuracy);
+                flag = false;
                 Debug.Log("切换至技能 1");
                 break;
             case KeyCode.Alpha2:
+                if (currentSkillNum != 2)
+                    SkillCells[currentSkillNum].ForceToStopCasting();
                 currentSkillNum = 2;
+                if (flag)
+                    SetUnitInitAccuracy(SkillCells[currentSkillNum].CurrentSkill.Data.Accuracy);
+                flag = false;
                 Debug.Log("切换至技能 2");
                 break;
             case KeyCode.Alpha3:
+                if (currentSkillNum != 3)
+                    SkillCells[currentSkillNum].ForceToStopCasting();
                 currentSkillNum = 3;
+                if (flag)
+                    SetUnitInitAccuracy(SkillCells[currentSkillNum].CurrentSkill.Data.Accuracy);
+                flag = false;
                 Debug.Log("切换至技能 3");
                 break;
         }
@@ -56,6 +82,11 @@ public class SkillTable : ISkillTable
     private void CellMouseBTNUp(EventMgr.MouseButtonUpEventInfo info)
     {
         SkillCells[currentSkillNum - 1].OnMouseButtonUp();
+    }
+
+    private void SetUnitInitAccuracy(float accuracy)
+    {
+        caster.RuntimeAccuracy = accuracy * GameDB.INITIAL_ACCURACY;
     }
 }
 

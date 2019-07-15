@@ -31,4 +31,6 @@ public abstract class AbstractBurstfireSkill : ISkill
     {
         Shoot();
     }
+
+    public abstract void AccuracyCooldown(float accuracy, float dt);
 }

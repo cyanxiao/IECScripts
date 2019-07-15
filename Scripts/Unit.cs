@@ -18,6 +18,8 @@ public partial class Unit : MonoBehaviour
     public UnitAttributes attributes;
     public Canvas unitCanvas;
     public Transform unitCamera;
+    // 射击精确度
+    public float RuntimeAccuracy;
     // 技能表
     SkillTable skillTable = new SkillTable();
 

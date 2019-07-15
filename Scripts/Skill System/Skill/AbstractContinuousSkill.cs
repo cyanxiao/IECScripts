@@ -51,4 +51,6 @@ public abstract class AbstractContinuousSkill : ISkill
         }
         isStarted = !isStarted;
     }
+
+    public abstract void AccuracyCooldown(float accuracy, float dt);
 }

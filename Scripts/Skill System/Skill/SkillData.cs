@@ -50,4 +50,6 @@ public class SkillData : ScriptableObject
     public BuffName[] Buffs;
     [Header("爆炸特性")]
     public float Force = 0;
+    [Header("射击精确度")]
+    public float RuntimeAccuracy = 100;
 }
