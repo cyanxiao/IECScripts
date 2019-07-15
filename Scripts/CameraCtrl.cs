@@ -28,7 +28,7 @@ public class CameraCtrl : MonoBehaviour
     public AnimationCurve FovCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 1.3f);
     public float MaxVelocity = 50f;
     public float smoothTimeForFov = 3f;
-   
+
     Camera thisCamera;
 
     #endregion
@@ -86,7 +86,7 @@ public class CameraCtrl : MonoBehaviour
     {
         prevPos = parent.position;
     }
-    
+
     Vector3 prevPos;
 
     private void FixedUpdate()
@@ -189,6 +189,39 @@ public class CameraCtrl : MonoBehaviour
     {
         float angle = MoveCtrl.Instance.chara.localEulerAngles.z;
         transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(0f, 0f, angle), 10f * dt);
+    }
+
+    /// <summary>
+    /// 获得离摄像机最近的单位。最近指单位在镜头上的2D位置离镜头中央最近，即“看起来”最近。
+    /// </summary>
+    /// <returns>最近的单位</returns>
+    public Unit GetClosestUnit()
+    {
+        Unit player = GameCtrl.PlayerUnit;
+        if (player == null)
+            return null;
+
+        IEnumerator<Unit> it = Gamef.GetUnitEnumerator();
+        Unit resUnit = null;
+        float minAngle = GameDB.MAX_AIMING_ANGLE;
+        Vector3 fwd = transform.forward;
+        Vector3 pos = transform.position;
+        Unit tmp;
+        do
+        {
+            tmp = it.Current;
+            if (tmp != player)
+            {
+                float angle = Vector3.Angle(fwd, tmp.transform.position - pos);
+                if (angle < minAngle)
+                {
+                    minAngle = angle;
+                    resUnit = tmp;
+                }
+            }
+        } while (it.MoveNext());
+        Debug.Log("Unit Closest to Player is " + resUnit == null ? "null" : resUnit.gameObject.name);
+        return resUnit;
     }
 
 }
