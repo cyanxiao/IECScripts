@@ -128,16 +128,7 @@ public static partial class Gamef
     /// <returns>单位</returns>
     public static Unit GetUnit(int unitID)
     {
-        return GameDB.unitPool.GetObject(unitID);
-    }
-
-    /// <summary>
-    /// 获取单位池的迭代器，即可以用于访问所有单位。
-    /// </summary>
-    /// <returns>单位池的迭代器</returns>
-    public static IEnumerator<Unit> GetUnitEnumerator()
-    {
-        return GameDB.unitPool.GetEnumerator();
+        return GameDB.unitPool.GetUnit(unitID);
     }
 
     /// <summary>
@@ -163,18 +154,8 @@ public static partial class Gamef
     /// <returns></returns>
     public static Missile GetMissile(int id)
     {
-        return GameDB.missilePool.GetObject(id);
+        return GameDB.missilePool.GetMissile(id);
     }
-
-    /// <summary>
-    /// 获取投掷物池的迭代器，即可以用于访问所有投掷物。
-    /// </summary>
-    /// <returns>投掷物池的迭代器</returns>
-    public static IEnumerator<Missile> GetMissileEnumerator()
-    {
-        return GameDB.missilePool.GetEnumerator();
-    }
-
 
     /// <summary>
     /// 计算单位实际受伤
