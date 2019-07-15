@@ -11,8 +11,7 @@ public interface ISkillCell
     /// 初始化技能槽位。
     /// </summary>
     /// <param name="caster">施法者，即技能槽位的拥有者</param>
-    /// <param name="spawnTransform">投掷物的出生点</param>
-    void Init(Unit caster, Transform spawnTransform);
+    void Init(Unit caster);
     /// <summary>
     /// 当鼠标左键被按下。
     /// </summary>
@@ -22,10 +21,9 @@ public interface ISkillCell
     /// </summary>
     void OnMouseButtonUp();
     /// <summary>
-    /// 将当前的技能槽位中的技能设置为skill。
+    /// 当前技能槽位中的技能。
     /// </summary>
-    /// <param name="skill">技能</param>
-    void SetSkill(ISkill skill);
+    ISkill CurrentSkill { get; set; }
     /// <summary>
     /// 强制停止施法。
     /// </summary>

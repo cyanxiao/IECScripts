@@ -18,34 +18,42 @@ public class SkillCell : ISkillCell
 
     readonly object mutex = new object();
 
-    
-    public void SetSkill(ISkill skill)
+
+    public ISkill CurrentSkill
     {
-        this.skill = skill;
-        skill.Init(caster, spawnTransform);
-        switch (skill.Data.SkillType)
+        get
         {
-            case SkillType.StrafeSkill:
-                cooldown = 60f / skill.Data.RPM;
-                break;
+            return skill;
+        }
 
-            case SkillType.BurstfireSkill:
-                cooldown = skill.Data.Cooldown;
-                break;
+        set
+        {
+            this.skill = value;
+            skill.Init(caster);
+            switch (skill.Data.SkillType)
+            {
+                case SkillType.StrafeSkill:
+                    cooldown = 60f / skill.Data.RPM;
+                    break;
 
-            case SkillType.ContinuousSkill:
-                cooldown = skill.Data.Cooldown;
-                break;
+                case SkillType.BurstfireSkill:
+                    cooldown = skill.Data.Cooldown;
+                    break;
 
-            default:
-                break;
+                case SkillType.ContinuousSkill:
+                    cooldown = skill.Data.Cooldown;
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
     
-    public void Init(Unit caster, Transform spawnTransform)
+    public void Init(Unit caster)
     {
         this.caster = caster;
-        this.spawnTransform = spawnTransform;
+        this.spawnTransform = caster.SpawnTransform;
         EventMgr.UpdateEvent.AddListener(Update);
     }
 

@@ -31,10 +31,10 @@ public abstract class AbstractContinuousSkill : ISkill
     /// </summary>
     protected abstract void Stop();
 
-    public void Init(Unit caster, Transform transform)
+    public void Init(Unit caster)
     {
         this.Caster = caster;
-        this.SpawnTransform = transform;
+        this.SpawnTransform = caster.SpawnTransform;
         LoadData();
     }
 
@@ -51,4 +51,6 @@ public abstract class AbstractContinuousSkill : ISkill
         }
         isStarted = !isStarted;
     }
+
+    public abstract void AccuracyCooldown(float dt);
 }
