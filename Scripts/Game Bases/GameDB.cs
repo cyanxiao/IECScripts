@@ -72,6 +72,10 @@ public partial class GameDB
     /// 最大瞄准角度
     /// </summary>
     public const float MAX_AIMING_ANGLE = 5f;
+    /// <summary>
+    /// 初始精确度相对于 Skill 精确度的比例
+    /// </summary>
+    public const float INITIAL_ACCURACY = 0.75f;
     #endregion
 
     #region 单位字典
