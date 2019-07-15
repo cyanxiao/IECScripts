@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Skill_TestBurstfireSkill : AbstractBurstfireSkill
 {
+
+    public override void AccuracyCooldown(float dt)
+    {
+        this.Caster.RuntimeAccuracy += dt * Data.AccuracyCooldownSpeed;
+    }
+
     protected override void LoadData()
     {
         Data = Gamef.LoadSkillData(SkillName.TestBurstfireSkill);
@@ -11,6 +17,6 @@ public class Skill_TestBurstfireSkill : AbstractBurstfireSkill
 
     protected override void Shoot()
     {
-        Debug.Log("Release a single burst fire skill.");
+        this.Caster.RuntimeAccuracy -= Data.AccuracyHeatupSpeed;
     }
 }

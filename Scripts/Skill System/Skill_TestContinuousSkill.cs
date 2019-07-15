@@ -7,6 +7,11 @@ using UnityEngine;
 /// </summary>
 public class Skill_TestContinuousSkill : AbstractContinuousSkill
 {
+    public override void AccuracyCooldown(float dt)
+    {
+        this.Caster.RuntimeAccuracy += dt * Data.AccuracyCooldownSpeed;
+    }
+
     protected override void LoadData()
     {
         Data = Gamef.LoadSkillData(SkillName.TestContinuousSkill);

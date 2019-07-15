@@ -68,6 +68,10 @@ public partial class GameDB
     /// 最大技能数量
     /// </summary>
     public const int MAX_SKILL_INDEX = 10;
+    /// <summary>
+    /// 初始精确度相对于 Skill 精确度的比例
+    /// </summary>
+    public const float INITIAL_ACCURACY = 0.75f;
     #endregion
 
     #region 单位字典

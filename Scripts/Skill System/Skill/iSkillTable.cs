@@ -8,8 +8,7 @@ public interface ISkillTable
     /// 对玩家所控制的施法者和出生 Transform 初始化技能表
     /// </summary>
     /// <param name="caster">施法者 Unit</param>
-    /// <param name="spawnTransform">出生位置的 Transform</param>
-    void Init(Unit caster, Transform spawnTransform);
+    void Init(Unit caster);
     /// <summary>
     /// 转换到玩家所选的技能
     /// </summary>

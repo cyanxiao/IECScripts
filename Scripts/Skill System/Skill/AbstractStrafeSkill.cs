@@ -20,10 +20,10 @@ public abstract class AbstractStrafeSkill : ISkill
     /// </summary>
     protected abstract void Shoot();
 
-    public void Init(Unit caster, Transform transform)
+    public void Init(Unit caster)
     {
         this.Caster = caster;
-        this.SpawnTransform = transform;
+        this.SpawnTransform = caster.SpawnTransform;
         LoadData();
     }
 
@@ -31,4 +31,6 @@ public abstract class AbstractStrafeSkill : ISkill
     {
         Shoot();
     }
+
+    public abstract void AccuracyCooldown(float dt);
 }

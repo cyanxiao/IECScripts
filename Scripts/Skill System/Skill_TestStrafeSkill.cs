@@ -6,6 +6,12 @@ public class Skill_TestStrafeSkill : AbstractStrafeSkill
 {
     private GameObject fireballPrefab;
     private GameObject tmp;
+
+    public override void AccuracyCooldown(float dt)
+    {
+        this.Caster.RuntimeAccuracy += dt * Data.AccuracyCooldownSpeed;
+    }
+
     protected override void LoadData()
     {
         Data = Gamef.LoadSkillData(SkillName.TestStrafeSkill);

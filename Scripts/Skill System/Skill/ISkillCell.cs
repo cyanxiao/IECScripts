@@ -11,8 +11,7 @@ public interface ISkillCell
     /// 初始化技能槽位。
     /// </summary>
     /// <param name="caster">施法者，即技能槽位的拥有者</param>
-    /// <param name="spawnTransform">投掷物的出生点</param>
-    void Init(Unit caster, Transform spawnTransform);
+    void Init(Unit caster);
     /// <summary>
     /// 当鼠标左键被按下。
     /// </summary>

@@ -22,6 +22,10 @@ public interface ISkill
     /// 初始化技能
     /// </summary>
     /// <param name="caster">施法者，即技能的拥有者和释放着</param>
-    /// <param name="transform">特效创建位置。如果不特殊设置，默认以施法者的transform作为特效创建位置</param>
-    void Init(Unit caster, Transform transform);
+    void Init(Unit caster);
+    /// <summary>
+    /// 技能逐帧冷却
+    /// </summary>
+    /// <param name="dt">一帧的时长</param>
+    void AccuracyCooldown(float dt);
 }
