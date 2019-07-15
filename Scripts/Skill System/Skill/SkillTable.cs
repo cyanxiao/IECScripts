@@ -12,7 +12,7 @@ public class SkillTable : ISkillTable
 
     public ISkill CurrentSkill => SkillCells[currentSkillNum - 1].CurrentSkill;
 
-    public void Init(Unit caster, Transform spawnTransform)
+    public void Init(Unit caster)
     {
         // Test Needed
         this.caster = caster;
@@ -20,7 +20,7 @@ public class SkillTable : ISkillTable
         for (int i = 0; i < 4; i++)
         {
             SkillCells[i] = new SkillCell();
-            SkillCells[i].Init(caster, spawnTransform);
+            SkillCells[i].Init(caster);
             // 设置初始技能
             ISkill tmpSkill = ConcreteSkillFactory.CreateSkill(caster.attributes.data.skills[i]);
             if (tmpSkill != null)

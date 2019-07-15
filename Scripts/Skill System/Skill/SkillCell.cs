@@ -29,7 +29,7 @@ public class SkillCell : ISkillCell
         set
         {
             this.skill = value;
-            skill.Init(caster, spawnTransform);
+            skill.Init(caster);
             switch (skill.Data.SkillType)
             {
                 case SkillType.StrafeSkill:
@@ -50,10 +50,10 @@ public class SkillCell : ISkillCell
         }
     }
     
-    public void Init(Unit caster, Transform spawnTransform)
+    public void Init(Unit caster)
     {
         this.caster = caster;
-        this.spawnTransform = spawnTransform;
+        this.spawnTransform = caster.SpawnTransform;
         EventMgr.UpdateEvent.AddListener(Update);
     }
 

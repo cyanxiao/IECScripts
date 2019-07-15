@@ -20,10 +20,10 @@ public abstract class AbstractBurstfireSkill : ISkill
     /// </summary>
     protected abstract void LoadData();
 
-    public void Init(Unit caster, Transform transform)
+    public void Init(Unit caster)
     {
         this.Caster = caster;
-        this.SpawnTransform = transform;
+        this.SpawnTransform = caster.SpawnTransform;
         LoadData();
     }
 
@@ -32,5 +32,5 @@ public abstract class AbstractBurstfireSkill : ISkill
         Shoot();
     }
 
-    public abstract void AccuracyCooldown(float accuracy, float dt);
+    public abstract void AccuracyCooldown(float dt);
 }

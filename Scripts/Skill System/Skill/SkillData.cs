@@ -52,4 +52,6 @@ public class SkillData : ScriptableObject
     public float Force = 0;
     [Header("射击精确度")]
     public float RuntimeAccuracy = 100;
+    public float AccuracyCooldownSpeed = 5;
+    public float AccuracyHeatupSpeed = 5;
 }

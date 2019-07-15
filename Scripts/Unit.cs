@@ -28,6 +28,10 @@ public partial class Unit : MonoBehaviour
     private void Awake()
     {
         rigbody = GetComponent<Rigidbody>();
+        if (SpawnTransform == null)
+        {
+            SpawnTransform = transform;
+        }
         //加入监听SP变化事件
         EventMgr.SPChangeEvent.AddListener(SPEvent);
     }
@@ -55,7 +59,7 @@ public partial class Unit : MonoBehaviour
         }
         // 如果该单位是施法单位，则初始化技能表
         if (attributes.data.IsCaster)
-            skillTable.Init(this, SpawnTransform ?? transform);
+            skillTable.Init(this);
     }
 
     private void Update()
