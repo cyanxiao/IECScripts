@@ -76,6 +76,15 @@ public partial class GameDB
     /// 初始精确度相对于 Skill 精确度的比例
     /// </summary>
     public const float INITIAL_ACCURACY = 0.75f;
+
+    /// <summary>
+    /// 最小精确度加成。如果点射型技能未经过瞄准直接开火，其精确度加成即为该值。
+    /// </summary>
+    public const float MIN_ACCURACY_BONUS = -0.5f;
+    /// <summary>
+    /// 最大精确度加成。如果点射型技能经过足够长时间的瞄准，其精确度最大加成即为该值。
+    /// </summary>
+    public const float MAX_ACCURACY_BONUS = 1f;
     #endregion
 
     #region 单位字典

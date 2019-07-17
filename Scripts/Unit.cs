@@ -22,7 +22,7 @@ public partial class Unit : MonoBehaviour
     public float RuntimeAccuracy;
     // 技能表
     SkillTable skillTable = new SkillTable();
-
+    public SkillTable SkillTable => skillTable;
 
     #region 生命周期
     private void Awake()
