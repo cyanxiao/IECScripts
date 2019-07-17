@@ -313,4 +313,18 @@ public static partial class Gamef
         //return buffCache.LoadData(name);
     }
     #endregion
+
+    #region 产生随机射击方向
+    /// <summary>
+    /// 产生一个基于当前射击精确度的相对于玩家的射击方向
+    /// </summary>
+    /// <param name="runtimeAccuracy">当前射击精确度</param>
+    /// <returns>射击方向</returns>
+    public static Vector3 GenerateRandomDirection(float runtimeAccuracy)
+    {
+        float horizontalAngle = Random.Range(runtimeAccuracy - 100, 100 - runtimeAccuracy);
+        float verticalAngle = Random.Range(runtimeAccuracy - 100, 100 - runtimeAccuracy);
+        return new Vector3(Mathf.Tan(horizontalAngle), Mathf.Tan(verticalAngle) / Mathf.Cos(horizontalAngle), 1);
+    }
+    #endregion
 }
