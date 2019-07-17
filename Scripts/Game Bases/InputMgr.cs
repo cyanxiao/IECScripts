@@ -176,5 +176,20 @@ public static class InputMgr
     }
 
     #endregion
-    
+
+    /// <summary>
+    /// 允许使用鼠标控制，如移动镜头、放技能、瞄准等等与鼠标相关的按键（expected, not implemented）
+    /// </summary>
+    public static bool EnableMouseControl = true;
+
+    /// <summary>
+    /// 瞄准键（鼠标右键）被按下且允许使用鼠标控制时为真。
+    /// </summary>
+    public static bool AimingButtonPressed
+    {
+        get
+        {
+            return EnableMouseControl && Input.GetMouseButton(1);
+        }
+    }
 }
