@@ -46,6 +46,7 @@ public class SkillData : ScriptableObject
     [Header("特殊效果")]
     public bool IsTracking = false;
     public float TrackingConst = 1f;
+    public float AimingTime = 2f;
     public bool IsPassive = false;
     public BuffName[] Buffs;
     [Header("爆炸特性")]
