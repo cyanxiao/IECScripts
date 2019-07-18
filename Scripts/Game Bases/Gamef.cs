@@ -322,9 +322,42 @@ public static partial class Gamef
     /// <returns>射击方向</returns>
     public static Vector3 GenerateRandomDirection(float runtimeAccuracy)
     {
-        float horizontalAngle = Random.Range(runtimeAccuracy - 100, 100 - runtimeAccuracy);
-        float verticalAngle = Random.Range(runtimeAccuracy - 100, 100 - runtimeAccuracy);
-        return new Vector3(Mathf.Tan(horizontalAngle), Mathf.Tan(verticalAngle) / Mathf.Cos(horizontalAngle), 1);
+        #region Chell's version
+        //float horizontalAngle = Random.Range(runtimeAccuracy - 100, 100 - runtimeAccuracy);
+        //float verticalAngle = Random.Range(runtimeAccuracy - 100, 100 - runtimeAccuracy);
+        //return new Vector3(Mathf.Tan(horizontalAngle), Mathf.Tan(verticalAngle) / Mathf.Cos(horizontalAngle), 1).normalized;
+        #endregion
+
+        #region Old version
+        //float maxAngle = (100 - runtimeAccuracy) * Mathf.Deg2Rad;
+        //float hAngle = Random.Range(-maxAngle, maxAngle);
+        //float vAngle = Random.Range(0, 2 * Mathf.PI);
+        //Vector2 h2 = Mathf.Sin(hAngle) * new Vector2(Mathf.Cos(vAngle), Mathf.Sin(vAngle));
+        //return new Vector3(h2.x, h2.y, Mathf.Cos(maxAngle));
+        #endregion
+
+        Vector3 axis = Vector3.right;
+        float maxAngle = 100 - runtimeAccuracy;
+        float vAngle = Random.Range(-maxAngle, maxAngle);
+        float hAngle = Random.Range(0, 360f);
+        Vector3 res = Quaternion.AngleAxis(vAngle, axis) * Vector3.forward;
+        return Quaternion.AngleAxis(hAngle, Vector3.forward) * res;
+    }
+
+    /// <summary>
+    /// 产生一个基于当前射击精确度的相对于玩家的射击方向
+    /// </summary>
+    /// <param name="forward">标准方向，即不考虑误差时的方向</param>
+    /// <param name="runtimeAccuracy">当前射击精确度</param>
+    /// <returns>射击方向</returns>
+    public static Vector3 GenerateRandomDirection(Vector3 forward, float runtimeAccuracy)
+    {
+        Vector3 axis = forward == Vector3.forward ? Vector3.right : Vector3.Cross(forward, Vector3.forward);
+        float maxAngle = 100 - runtimeAccuracy;
+        float vAngle = Random.Range(-maxAngle, maxAngle);
+        float hAngle = Random.Range(0, 360f);
+        Vector3 res = Quaternion.AngleAxis(vAngle, axis) * forward;
+        return Quaternion.AngleAxis(hAngle, forward) * res;
     }
     #endregion
 }

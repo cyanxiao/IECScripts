@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(TrackSystem))]
 public class Missile : MonoBehaviour
 {
     public float HP { get; private set; }
@@ -18,8 +19,13 @@ public class Missile : MonoBehaviour
     IMissileHitHandler missileHitHandler;
     IPhysicalEffectHandler physicalEffectHandler = new PhysicalEffectHandler();
     ISpecialEffectHandler specialEffectHandler;
-
+    TrackSystem trackSystem;
     bool isInit = false;
+
+    private void Awake()
+    {
+        trackSystem = GetComponent<TrackSystem>();
+    }
 
     /// <summary>
     /// 对投掷物初始化。
@@ -156,7 +162,6 @@ public class Missile : MonoBehaviour
             {
                 if (IsAlive)
                 {
-                    IsAlive = false;
                     Death();
                 }
             }
@@ -165,6 +170,7 @@ public class Missile : MonoBehaviour
 
     void Death()
     {
+        IsAlive = false;
         specialEffectHandler.CreateDestroyEffect(Caster, this, deathEffect);
         Gamef.MissileClear(ID);
         Gamef.Destroy(gameObject);
