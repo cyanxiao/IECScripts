@@ -352,7 +352,7 @@ public static partial class Gamef
     /// <returns>射击方向</returns>
     public static Vector3 GenerateRandomDirection(Vector3 forward, float runtimeAccuracy)
     {
-        Vector3 axis = forward == Vector3.forward ? Vector3.right : Vector3.Cross(forward, Vector3.forward);
+        Vector3 axis = forward == Vector3.forward ? Vector3.right : Vector3.Cross(forward, Vector3.forward).normalized;
         float maxAngle = 100 - runtimeAccuracy;
         float vAngle = Random.Range(-maxAngle, maxAngle);
         float hAngle = Random.Range(0, 360f);
