@@ -63,16 +63,26 @@ public partial class GameCtrl : MonoBehaviour
 
         if (BuildDataPath)
         {
+            // 建立单位数据路径
             string[] paths = GameDB.Instance.unitDataPath.paths = new string[(int)UnitName.MaxIndex];
             for (int i = 0; i < paths.Length; i++)
             {
                 paths[i] = "Unit/" + ((UnitName)i).ToString() + "Data";
             }
+            // 建立技能数据路径
             paths = GameDB.Instance.skillDataPath.paths = new string[GameDB.MAX_SKILL_INDEX];
             foreach (SkillName name in Enum.GetValues(typeof(SkillName)))
             {
                 int i = (int)name;
                 paths[i] = "Skill/" + name + "Data";
+            }
+            // 建立Prefab路径
+            Array enums = Enum.GetValues(typeof(PrefabName));
+            paths = GameDB.Instance.prefabPath.paths = new string[enums.Length];
+            foreach (PrefabName name in enums)
+            {
+                int i = (int)name;
+                paths[i] = name.ToString();
             }
         }
 

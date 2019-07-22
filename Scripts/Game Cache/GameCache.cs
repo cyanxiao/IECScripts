@@ -5,12 +5,9 @@ using UnityEngine;
 public enum PrefabName
 {
     EmptyObject = 0,
-    多重火球小火球 = 1,
+    Fireball = 1,
     黑魔爆球 = 2,
-    奥术爆破死亡动画,
-    多重火球小火球死亡动画,
-    多重火球出生,
-    迅捷术特效,
+    FireballDeathEffect,
 }
 
 public class GameObjectCache
@@ -26,6 +23,7 @@ public class GameObjectCache
     }
 
     private static CacheBlock[] blocks = new CacheBlock[PREFAB_NUM];
+
     static bool isInit = false;
     public static void Init()
     {
@@ -35,6 +33,7 @@ public class GameObjectCache
         for (int i = 0; i < PREFAB_NUM; i++)
         {
             blocks[i].objStack = new Stack<GameObject>();
+            blocks[i].prevAccessedTime = Time.time;
         }
     }
 
@@ -98,7 +97,7 @@ public class GameObjectCache
         {
             blocks[index].objStack.Push(gameObject);
             blocks[index].prevAccessedTime = Time.time;
-            gameObject.transform.SetParent(GameSceneInfo.Instance.ReusableGameObjectParent);
+            gameObject.transform.SetParent(GameDB.Instance.ReusableObjectPool);
         }
     }
 }

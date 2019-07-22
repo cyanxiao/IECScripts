@@ -15,18 +15,18 @@ public class Missile : MonoBehaviour
     public int ID { get; private set; } = -1;
 
     public Unit Caster { get; private set; }
+    public Unit Enemy { get; private set; }
+    Transform enemyTrans;
 
     IMissileHitHandler missileHitHandler;
     IPhysicalEffectHandler physicalEffectHandler = new PhysicalEffectHandler();
     ISpecialEffectHandler specialEffectHandler;
     TrackSystem trackSystem;
+
     bool isInit = false;
 
-    private void Awake()
-    {
-        trackSystem = GetComponent<TrackSystem>();
-    }
 
+    #region Init Methods
     /// <summary>
     /// 对投掷物初始化。
     /// </summary>
@@ -34,14 +34,17 @@ public class Missile : MonoBehaviour
     /// <param name="skill">释放投掷物的技能</param>
     public void Init(Unit caster, ISkill skill)
     {
-        this.Caster = caster;
-        this.Skill = skill;
-        this.Damage = skill.Data.Damage;
-        this.HP = skill.Data.MissileHP;
-        this.missileHitHandler = new MissileHitBasicHandler();
-        this.specialEffectHandler = new SpecialEffectHandler();
-        ID = Gamef.MissileBirth(this);
-        isInit = true;
+        Init(caster, null, skill, new MissileHitBasicHandler(), new SpecialEffectHandler());
+    }
+    /// <summary>
+    /// 对投掷物初始化。
+    /// </summary>
+    /// <param name="caster">投掷物的释放者</param>
+    /// <param name="enemy">敌方目标，即投掷物的追踪对象</param>
+    /// <param name="skill">释放投掷物的技能</param>
+    public void Init(Unit caster, Unit enemey, ISkill skill)
+    {
+        Init(caster, enemey, skill, new MissileHitBasicHandler(), new SpecialEffectHandler());
     }
 
     /// <summary>
@@ -52,14 +55,7 @@ public class Missile : MonoBehaviour
     /// <param name="specialEffectHandler">特效创建</param>
     public void Init(Unit caster, ISkill skill, ISpecialEffectHandler specialEffectHandler)
     {
-        this.Caster = caster;
-        this.Skill = skill;
-        this.Damage = skill.Data.Damage;
-        this.HP = skill.Data.MissileHP;
-        this.missileHitHandler = new MissileHitBasicHandler();
-        this.specialEffectHandler = specialEffectHandler;
-        ID = Gamef.MissileBirth(this);
-        isInit = true;
+        Init(caster, null, skill, new MissileHitBasicHandler(), specialEffectHandler);
     }
 
     /// <summary>
@@ -71,15 +67,40 @@ public class Missile : MonoBehaviour
     /// <param name="specialEffectHandler">特效创建</param>
     public void Init(Unit caster, ISkill skill, IMissileHitHandler missileHitHandler, ISpecialEffectHandler specialEffectHandler)
     {
-        this.Caster = caster;
-        this.Skill = skill;
-        this.Damage = skill.Data.Damage;
-        this.HP = skill.Data.MissileHP;
-        this.missileHitHandler = missileHitHandler;
-        this.specialEffectHandler = specialEffectHandler;
-        ID = Gamef.MissileBirth(this);
-        isInit = true;
+        Init(caster, null, skill, missileHitHandler, specialEffectHandler);
     }
+
+    /// <summary>
+    /// 对投掷物初始化。
+    /// </summary>
+    /// <param name="caster">投掷物的释放者</param>
+    /// <param name="enemy">敌方目标，即投掷物的追踪对象</param>
+    /// <param name="skill">释放投掷物的技能</param>
+    /// <param name="missileHitHandler">投掷物碰撞处理方式</param>
+    /// <param name="specialEffectHandler">特效创建</param>
+    public void Init(Unit caster, Unit enemy, ISkill skill, IMissileHitHandler missileHitHandler, ISpecialEffectHandler specialEffectHandler)
+    {
+        lock (this)
+        {
+            if (isInit)
+                return;
+
+            this.Caster = caster;
+            this.Enemy = enemy;
+            this.enemyTrans = enemy == null ? null : enemy.transform;
+            this.Skill = skill;
+            this.Damage = skill.Data.Damage;
+            this.HP = skill.Data.MissileHP;
+            this.missileHitHandler = missileHitHandler;
+            this.specialEffectHandler = specialEffectHandler;
+            ID = Gamef.MissileBirth(this);
+            if (enemy != null)
+                trackSystem?.StartTracking(enemy, skill.Data.TrackingConst);
+
+            isInit = true;
+        }
+    }
+
     /// <summary>
     /// 设置对每个被AOE伤害波及的单位和投掷物的处理方式。
     /// </summary>
@@ -89,6 +110,41 @@ public class Missile : MonoBehaviour
     {
         this.unitHandler = unitHandler;
         this.missileHandler = missileHandler;
+    }
+
+    #endregion
+
+    #region Life Periods
+    private void Awake()
+    {
+        trackSystem = GetComponent<TrackSystem>();
+    }
+
+
+    /// <summary>
+    /// Enable后重置参数
+    /// </summary>
+    private void OnEnable()
+    {
+        if (isInit)
+        {
+            this.Caster = null;
+            this.Skill = null;
+            this.missileHitHandler = null;
+            this.specialEffectHandler = null;
+            IsAlive = true;
+            timer = 0f;
+            ID = -1;
+            isInit = false;
+        }
+    }
+
+    private void Start()
+    {
+        if (gameObject.layer != Layer.Missile)
+        {
+            Debug.LogError(string.Format("Missile {0} is not in Missile layer.", gameObject.name));
+        }
     }
 
     float timer = 0f;
@@ -113,9 +169,10 @@ public class Missile : MonoBehaviour
     {
         if (!isInit)
             return;
-        Track();
         Move(Time.fixedDeltaTime);
     }
+
+    #endregion
 
     private void OnTriggerEnter(Collider other)
     {
@@ -172,6 +229,8 @@ public class Missile : MonoBehaviour
     {
         IsAlive = false;
         specialEffectHandler.CreateDestroyEffect(Caster, this, deathEffect);
+        if (Enemy != null)
+            trackSystem?.StopTracking();
         Gamef.MissileClear(ID);
         Gamef.Destroy(gameObject);
     }
@@ -183,22 +242,6 @@ public class Missile : MonoBehaviour
     void Move(float dt)
     {
         transform.Translate(Vector3.forward * Skill.Data.Speed * dt);
-    }
-
-    /// <summary>
-    /// Enable后重置参数
-    /// </summary>
-    private void OnEnable()
-    {
-        if (isInit)
-        {
-            this.Caster = null;
-            this.Skill = null;
-            this.missileHitHandler = null;
-            this.specialEffectHandler = null;
-            ID = -1;
-            isInit = false;
-        }
     }
 
     #region AOE爆炸

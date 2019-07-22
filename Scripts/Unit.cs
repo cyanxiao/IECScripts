@@ -18,8 +18,20 @@ public partial class Unit : MonoBehaviour
     public UnitAttributes attributes;
     public Canvas unitCanvas;
     public Transform unitCamera;
+    private float runtimeAccuracy;
     // 射击精确度
-    public float RuntimeAccuracy;
+    public float RuntimeAccuracy
+    {
+        get
+        {
+            return skillTable.CurrentSkill.Data.RuntimeAccuracy;
+        }
+
+        set
+        {
+            runtimeAccuracy = value;
+        }
+    }
     // 技能表
     SkillTable skillTable = new SkillTable();
     public SkillTable SkillTable => skillTable;
@@ -38,6 +50,10 @@ public partial class Unit : MonoBehaviour
 
     private void Start()
     {
+        if (gameObject.layer != Layer.Unit)
+        {
+            Debug.LogError(string.Format("Unit {0} is not in Unit layer.", gameObject.name));
+        }
         //注册单位
         lock (GameDB.unitPool)
             attributes.ID = Gamef.UnitBirth(this);
@@ -64,13 +80,18 @@ public partial class Unit : MonoBehaviour
 
     private void Update()
     {
-        //回复 护盾值 和 魔法值
-        attributes.ManaPoint.Value += attributes.MPRegenerationRate.Value * Time.deltaTime;
+        //回复 护盾值
         attributes.SheildPoint += attributes.SPRegenerationRate.Value * Time.deltaTime;
 
+        if (attributes.data.IsCaster)
+        {
+            //回复 魔法值 和 当前技能冷却（应当是全体技能冷却，同时技能初始精确度未设置）
+            attributes.ManaPoint.Value += attributes.MPRegenerationRate.Value * Time.deltaTime;
+            skillTable.CurrentSkill.AccuracyCooldown(Time.deltaTime);
+        }
+
         //触发buff效果
-        if (BuffEvent != null)
-            BuffEvent();
+        BuffEvent?.Invoke();
 
         ////单位画布面对摄像机
         //if (unitCanvas != null)
