@@ -212,6 +212,12 @@ public class CameraCtrl : MonoBehaviour
             tmp = it.Current;
             if (tmp != player)
             {
+                if (tmp == null)
+                {
+                    Debug.Log("???");
+                    it.Reset();
+                    tmp = it.Current;
+                }
                 float angle = Vector3.Angle(fwd, tmp.transform.position - pos);
                 if (angle < minAngle)
                 {
@@ -220,7 +226,7 @@ public class CameraCtrl : MonoBehaviour
                 }
             }
         } while (it.MoveNext());
-        Debug.Log("Unit Closest to Player is " + resUnit == null ? "null" : resUnit.gameObject.name);
+        Debug.Log("Unit Closest to Player is " + (resUnit == null ? "null" : resUnit.gameObject.name));
         return resUnit;
     }
 

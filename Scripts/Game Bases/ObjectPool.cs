@@ -25,9 +25,9 @@ public class ObjectPool<T> : IEnumerable<T>
     /// <summary>
     /// 给对象分配ID
     /// </summary>
-    /// <param name="missile">目标对象</param>
+    /// <param name="obj">目标对象</param>
     /// <returns>对象ID</returns>
-    public int IDAlloc(T missile)
+    public int IDAlloc(T obj)
     {
         lock (blkList)
         {
@@ -38,16 +38,16 @@ public class ObjectPool<T> : IEnumerable<T>
             {
                 res = MaxLength++;
                 //如果超负荷，则申请一个新的数组
-                if ((res & ~0xff) >= blkList.Count)
+                if ((res & BLK_MASK) >= blkList.Count)
                 {
-                    Cell[] cells = new Cell[BLK_LENGTH];
-                    for (int i = 0; i < BLK_LENGTH; i++)
-                    {
-                        cells[i].isValid = false;
-                    }
-                    blkList.Add(cells);
+                    ExtendPool();
                 }
             }
+            blkList[res & BLK_MASK][res & OFFSET_MASK] = new Cell()
+            {
+                isValid = true,
+                content = obj,
+            };
             Debug.Log("Add " + typeof(T).ToString() + " to blk " + (res & BLK_MASK) + ", cell " + (res & OFFSET_MASK));
             return res;
         }

@@ -24,7 +24,7 @@ MonoBehaviour:
   LifeSpan: 4
   Cooldown: 0.2
   ManaCost: 20
-  ManaCostPerSec: 15
+  ManaCostPerSec: 18
   MissileHP: 5
   IsAOE: 0
   InnerBlastRadius: 0
@@ -35,6 +35,10 @@ MonoBehaviour:
   OuterDamageCoefficient: 0.2
   IsTracking: 0
   TrackingConst: 1
+  AimingTime: 2
   IsPassive: 0
   Buffs: 
   Force: 0
+  RuntimeAccuracy: 100
+  AccuracyCooldownSpeed: 5
+  AccuracyHeatupSpeed: 5

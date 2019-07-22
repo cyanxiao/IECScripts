@@ -22,7 +22,8 @@ public class Skill_TestStrafeSkill : AbstractStrafeSkill
 
     protected override void Shoot()
     {
-        tmp = Gamef.Instantiate(fireballPrefab, SpawnTransform.position, Quaternion.LookRotation(Caster.transform.forward));
-        tmp.GetComponent<Missile>().Init(Caster, this);
+        Vector3 dir = Gamef.GenerateRandomDirection(Caster.transform.forward, Caster.RuntimeAccuracy);
+        tmp = Gamef.Instantiate(fireballPrefab, SpawnTransform.position, Quaternion.LookRotation(dir));
+        tmp.GetComponent<Missile>().Init(Caster, AimController.Instance.TargetForStrafeSkill, this);
     }
 }

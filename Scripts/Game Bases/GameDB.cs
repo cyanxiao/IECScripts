@@ -281,6 +281,26 @@ public partial class GameDB
         };
     }
     #endregion
+    private Transform reusableObjectPool = null;
+    public Transform ReusableObjectPool
+    {
+        get
+        {
+            if (reusableObjectPool == null)
+            {
+                GameObject obj = GameObject.FindGameObjectWithTag("Reusable Object Pool");
+                if (obj == null)
+                {
+                    obj = Object.Instantiate(EmptyObject);
+                    obj.name = "Reusable Object Pool";
+                    obj.tag = "Reusable Object Pool";
+                }
+                reusableObjectPool = obj.transform;
+            }
+            return reusableObjectPool;
+        }
+    }
+
     //函数曲线索引
     public DataPathIndex funcCurvePath;
     //单位数据索引

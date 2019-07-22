@@ -34,7 +34,11 @@ MonoBehaviour:
   MiddleDamageCoefficient: 0.5
   OuterDamageCoefficient: 0.2
   IsTracking: 0
-  TrackingConst: 1
+  TrackingConst: 3
+  AimingTime: 2
   IsPassive: 0
   Buffs: 
   Force: 10
+  RuntimeAccuracy: 85
+  AccuracyCooldownSpeed: 5
+  AccuracyHeatupSpeed: 5

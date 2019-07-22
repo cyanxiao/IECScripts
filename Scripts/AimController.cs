@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Unit))]
 public class AimController : MonoBehaviour
 {
+    public static AimController Instance { get; private set; }
     /// <summary>
     /// 玩家
     /// </summary>
@@ -35,32 +36,27 @@ public class AimController : MonoBehaviour
         {
             if (value == target)
             {
-                TrackingAbilityBonus += Time.deltaTime / unit.SkillTable.CurrentSkill.Data.AimingTime * (GameDB.MAX_ACCURACY_BONUS - GameDB.MIN_ACCURACY_BONUS);
+                AimingTime += Time.deltaTime;
             }
             else
             {
                 target = value;
-                bonus = GameDB.MIN_ACCURACY_BONUS;
+                AimingTime = 0f;
             }
         }
     }
-    private float bonus = GameDB.MIN_ACCURACY_BONUS;
+
     /// <summary>
-    /// 点射型技能的追踪能力加成
+    /// 点射型技能的已瞄准时间
     /// </summary>
-    public float TrackingAbilityBonus
+    public float AimingTime
     {
-        get
-        {
-            return bonus;
-        }
-        set
-        {
-            bonus = Mathf.Clamp(value, GameDB.MIN_ACCURACY_BONUS, GameDB.MAX_ACCURACY_BONUS);
-        }
+        get;
+        private set;
     }
     private void Awake()
     {
+        Instance = this;
         unit = GetComponent<Unit>();
     }
 
